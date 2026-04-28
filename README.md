@@ -12,6 +12,10 @@ A full-stack Customer Purchase Prediction system built with **Flask API** + **Lo
 
 **🌐 Dashboard:** [http://localhost:5000](http://localhost:5000)   |   **📡 API Base:** `http://localhost:5000/api`
 
+
+
+````
+
 ---
 
 customer_purchase_prediction/
@@ -33,9 +37,6 @@ customer_purchase_prediction/
     ├── css/style.css               # Basic clean CSS
     └── js/app.js                   # Navbar toggle
 
-````
-
----
 
 ## Model Performance
 
