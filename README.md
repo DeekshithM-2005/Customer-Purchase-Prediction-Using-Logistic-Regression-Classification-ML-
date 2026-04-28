@@ -1,5 +1,3 @@
-# Customer-Purchase-Prediction-Using-Logistic-Regression-Classification-ML-
-
 # 🛒 ShopInsight AI — Customer Purchase Prediction
 
 ## Project Overview
@@ -14,27 +12,16 @@ A full-stack Customer Purchase Prediction system built with **Flask API** + **Lo
 
 ---
 
-## Project Structure 
+## Screenshots
 
-customer_purchase_prediction/
-├── app.py                          # Flask app (2 pages + 2 APIs)
-├── requirements.txt
-├── data/
-│   ├── online_shoppers_intention.csv   # Primary dataset (12,330 rows)
-│   └── marketing_campaign.csv          # Secondary dataset (available)
-├── model/
-│   ├── train_model.py              # Training script
-│   ├── logistic_model.pkl          # Trained model
-│   ├── scaler.pkl                  # StandardScaler
-│   └── metrics.json                # Performance metrics
-├── templates/
-│   ├── base.html                   # Base layout with navbar
-│   ├── index.html                  # Home page
-│   └── predict.html                # Prediction form
-└── static/
-    ├── css/style.css               # Basic clean CSS
-    └── js/app.js                   # Navbar toggle
-
+````carousel
+![Dashboard — KPI stats, model performance rings, quick predict widget](C:\Users\deeks\.gemini\antigravity\brain\784dd5f3-44c3-4bc8-8355-85cf9a20e3e8\dashboard_screenshot_1776060738938.png)
+<!-- slide -->
+![Predict — Full customer profile form with 4 sections and result panel](C:\Users\deeks\.gemini\antigravity\brain\784dd5f3-44c3-4bc8-8355-85cf9a20e3e8\predict_screenshot_1776060758089.png)
+<!-- slide -->
+![Analytics — Confusion matrix, model summary, demographic breakdowns](C:\Users\deeks\.gemini\antigravity\brain\784dd5f3-44c3-4bc8-8355-85cf9a20e3e8\analytics_screenshot_1776060776222.png)
+<!-- slide -->
+![Customers — Searchable, sortable, paginated customer database](C:\Users\deeks\.gemini\antigravity\brain\784dd5f3-44c3-4bc8-8355-85cf9a20e3e8\customers_screenshot_1776060795159.png)
 ````
 
 ---
