@@ -12,11 +12,9 @@ A full-stack Customer Purchase Prediction system built with **Flask API** + **Lo
 
 **🌐 Dashboard:** [http://localhost:5000](http://localhost:5000)   |   **📡 API Base:** `http://localhost:5000/api`
 
-
-
-````
-
 ---
+
+## Project Structure 
 
 customer_purchase_prediction/
 ├── app.py                          # Flask app (2 pages + 2 APIs)
@@ -37,6 +35,9 @@ customer_purchase_prediction/
     ├── css/style.css               # Basic clean CSS
     └── js/app.js                   # Navbar toggle
 
+````
+
+---
 
 ## Model Performance
 
