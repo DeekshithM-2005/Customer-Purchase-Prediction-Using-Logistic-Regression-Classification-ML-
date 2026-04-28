@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block title %}Predict{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚡ Purchase Prediction</h1>
+    <p>Enter customer session details to predict purchase likelihood using Logistic Regression</p>
+</div>
+
+<!-- Prediction Form -->
+<div class="card">
+    <div class="card-header">
+        <h2><span class="h-icon">📋</span> Customer Session Details</h2>
+    </div>
+    <div class="card-body">
+        <form id="predictionForm">
+            <!-- Section 1: Page Activity -->
+            <div class="form-section">
+                <h3 class="form-section-title">
+                    <span class="s-num">1</span> Page Activity
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="Administrative">Administrative Pages</label>
+                        <input type="number" id="Administrative" name="Administrative" value="0" min="0" max="30" required class="form-control">
+                        <small>Number of admin pages visited</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="Administrative_Duration">Admin Duration (sec)</label>
+                        <input type="number" id="Administrative_Duration" name="Administrative_Duration" value="0" min="0" step="0.01" required class="form-control">
+                        <small>Time spent on admin pages</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="Informational">Informational Pages</label>
+                        <input type="number" id="Informational" name="Informational" value="0" min="0" max="30" required class="form-control">
+                        <small>Number of info pages visited</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="Informational_Duration">Info Duration (sec)</label>
+                        <input type="number" id="Informational_Duration" name="Informational_Duration" value="0" min="0" step="0.01" required class="form-control">
+                        <small>Time spent on info pages</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProductRelated">Product Related Pages</label>
+                        <input type="number" id="ProductRelated" name="ProductRelated" value="1" min="0" max="500" required class="form-control">
+                        <small>Number of product pages visited</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProductRelated_Duration">Product Duration (sec)</label>
+                        <input type="number" id="ProductRelated_Duration" name="ProductRelated_Duration" value="0" min="0" step="0.01" required class="form-control">
+                        <small>Time spent on product pages</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Session Metrics -->
+            <div class="form-section">
+                <h3 class="form-section-title">
+                    <span class="s-num">2</span> Session Metrics
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="BounceRates">Bounce Rate</label>
+                        <input type="number" id="BounceRates" name="BounceRates" value="0.02" min="0" max="0.2" step="0.001" required class="form-control">
+                        <small>Page bounce rate (0 - 0.2)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="ExitRates">Exit Rate</label>
+                        <input type="number" id="ExitRates" name="ExitRates" value="0.04" min="0" max="0.2" step="0.001" required class="form-control">
+                        <small>Page exit rate (0 - 0.2)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="PageValues">Page Values</label>
+                        <input type="number" id="PageValues" name="PageValues" value="0" min="0" step="0.01" required class="form-control">
+                        <small>Avg page value (higher = more likely)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="SpecialDay">Special Day</label>
+                        <input type="number" id="SpecialDay" name="SpecialDay" value="0" min="0" max="1" step="0.1" required class="form-control">
+                        <small>Closeness to special day (0 - 1)</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Visitor Information -->
+            <div class="form-section">
+                <h3 class="form-section-title">
+                    <span class="s-num">3</span> Visitor Information
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="Month">Month</label>
+                        <select id="Month" name="Month" class="form-control" required>
+                            {% for month in months %}
+                            <option value="{{ month }}">{{ month }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="VisitorType">Visitor Type</label>
+                        <select id="VisitorType" name="VisitorType" class="form-control" required>
+                            {% for visitor in visitors %}
+                            <option value="{{ visitor }}">{{ visitor.replace('_', ' ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Weekend">Weekend</label>
+                        <select id="Weekend" name="Weekend" class="form-control" required>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="OperatingSystems">Operating System</label>
+                        <select id="OperatingSystems" name="OperatingSystems" class="form-control" required>
+                            <option value="1">Windows</option>
+                            <option value="2" selected>Mac</option>
+                            <option value="3">Linux</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Browser">Browser</label>
+                        <select id="Browser" name="Browser" class="form-control" required>
+                            <option value="1">Chrome</option>
+                            <option value="2" selected>Firefox</option>
+                            <option value="3">Safari</option>
+                            <option value="4">Edge</option>
+                            <option value="5">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Region">Region</label>
+                        <input type="number" id="Region" name="Region" value="1" min="1" max="9" required class="form-control">
+                        <small>Region code (1 - 9)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="TrafficType">Traffic Type</label>
+                        <input type="number" id="TrafficType" name="TrafficType" value="1" min="1" max="20" required class="form-control">
+                        <small>Traffic source type (1 - 20)</small>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="predictBtn">
+                🔍 Run Prediction
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Result Panel -->
+<div class="card" id="resultCard" style="display: none;">
+    <div class="card-header">
+        <h2><span class="h-icon">🎯</span> Prediction Result</h2>
+    </div>
+    <div class="card-body">
+        <div class="result-content">
+            <div class="result-icon" id="resultIcon">🔮</div>
+            <div class="result-label" id="resultLabel">—</div>
+            <div class="result-confidence" id="resultConfidence">—</div>
+
+            <div class="prob-bars">
+                <div class="prob-item">
+                    <div class="prob-header">
+                        <span>✅ Will Purchase</span>
+                        <span id="purchaseProb">0%</span>
+                    </div>
+                    <div class="prob-bar">
+                        <div class="prob-fill purchase" id="purchaseBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="prob-item">
+                    <div class="prob-header">
+                        <span>❌ Will Not Purchase</span>
+                        <span id="noPurchaseProb">0%</span>
+                    </div>
+                    <div class="prob-bar">
+                        <div class="prob-fill no-purchase" id="noPurchaseBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('predictBtn');
+    btn.classList.add('loading');
+    btn.innerHTML = 'Predicting...';
+
+    const formData = {};
+    const inputs = e.target.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        if (input.name === 'Month' || input.name === 'VisitorType') {
+            formData[input.name] = input.value;
+        } else {
+            formData[input.name] = parseFloat(input.value);
+        }
+    });
+
+    try {
+        const res = await fetch('/api/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const result = await res.json();
+        if (result.error) { alert('Error: ' + result.error); return; }
+
+        const card = document.getElementById('resultCard');
+        card.style.display = 'block';
+
+        const icon = document.getElementById('resultIcon');
+        const label = document.getElementById('resultLabel');
+        const conf = document.getElementById('resultConfidence');
+
+        if (result.prediction === 1) {
+            icon.textContent = '✅';
+            label.textContent = 'Will Purchase';
+            label.className = 'result-label result-positive';
+        } else {
+            icon.textContent = '❌';
+            label.textContent = 'Will Not Purchase';
+            label.className = 'result-label result-negative';
+        }
+        conf.innerHTML = 'Confidence: <span>' + result.confidence + '%</span>';
+
+        document.getElementById('purchaseProb').textContent = result.purchase_probability + '%';
+        document.getElementById('noPurchaseProb').textContent = result.no_purchase_probability + '%';
+        document.getElementById('purchaseBar').style.width = result.purchase_probability + '%';
+        document.getElementById('noPurchaseBar').style.width = result.no_purchase_probability + '%';
+
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+        alert('Error: ' + err.message);
+    } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = '🔍 Run Prediction';
+    }
+});
+</script>
+{% endblock %}

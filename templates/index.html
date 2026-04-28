@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-badge">🎓 Machine Learning Student Project</div>
+    <h1 class="hero-title">Customer Purchase Prediction</h1>
+    <h2 class="hero-subtitle">Using Logistic Regression Classification</h2>
+    <p class="hero-desc">
+        Predicting whether an online shopper will complete a purchase based on their browsing 
+        session data using Logistic Regression on the UCI Online Shoppers Intention Dataset.
+    </p>
+    <a href="/predict" class="btn btn-primary">⚡ Make a Prediction</a>
+</div>
+
+<!-- Dataset Overview -->
+<section class="section">
+    <h2 class="section-title">📁 Dataset Overview</h2>
+    <div class="cards-row">
+        <div class="info-card">
+            <div class="info-card-icon">📊</div>
+            <div class="info-card-value">{{ total_samples }}</div>
+            <div class="info-card-label">Total Samples</div>
+        </div>
+        <div class="info-card">
+            <div class="info-card-icon">🔢</div>
+            <div class="info-card-value">17</div>
+            <div class="info-card-label">Features</div>
+        </div>
+        <div class="info-card">
+            <div class="info-card-icon">✅</div>
+            <div class="info-card-value">{{ purchased }}</div>
+            <div class="info-card-label">Purchased</div>
+        </div>
+        <div class="info-card">
+            <div class="info-card-icon">❌</div>
+            <div class="info-card-value">{{ not_purchased }}</div>
+            <div class="info-card-label">Not Purchased</div>
+        </div>
+    </div>
+
+    <div class="dataset-bar">
+        <div class="dataset-bar-fill" style="width: {{ purchase_rate }}%;">
+            {{ purchase_rate }}% Purchase Rate
+        </div>
+    </div>
+
+    <div class="dataset-details">
+        <p><strong>Dataset:</strong> Online Shoppers Purchasing Intention Dataset</p>
+        <p><strong>Source:</strong> UCI Machine Learning Repository</p>
+        <p><strong>Target Variable:</strong> Revenue (True / False) — Whether the session ended with a purchase</p>
+    </div>
+</section>
+
+<!-- Model Performance -->
+<section class="section">
+    <h2 class="section-title">📈 Model Performance</h2>
+    <div class="cards-row">
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.accuracy * 100) | round(1) }}%</div>
+            <div class="metric-card-label">Accuracy</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.accuracy * 100 }}%; background: linear-gradient(90deg,#22c55e,#4ade80);"></div></div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.precision * 100) | round(1) }}%</div>
+            <div class="metric-card-label">Precision</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.precision * 100 }}%; background: linear-gradient(90deg,#3b82f6,#60a5fa);"></div></div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.recall * 100) | round(1) }}%</div>
+            <div class="metric-card-label">Recall</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.recall * 100 }}%; background: linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.f1_score * 100) | round(1) }}%</div>
+            <div class="metric-card-label">F1 Score</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.f1_score * 100 }}%; background: linear-gradient(90deg,#a855f7,#c084fc);"></div></div>
+        </div>
+    </div>
+    <div class="cards-row" style="margin-top: 4px;">
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.roc_auc * 100) | round(1) }}%</div>
+            <div class="metric-card-label">ROC-AUC Score</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.roc_auc * 100 }}%; background: linear-gradient(90deg,#ec4899,#f472b6);"></div></div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-card-value">{{ (metrics.cv_accuracy_mean * 100) | round(1) }}%</div>
+            <div class="metric-card-label">Cross-Validation</div>
+            <div class="metric-bar-bg"><div class="metric-bar-fill-sm" style="width: {{ metrics.cv_accuracy_mean * 100 }}%; background: linear-gradient(90deg,#14b8a6,#2dd4bf);"></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Confusion Matrix -->
+<section class="section">
+    <h2 class="section-title">🧮 Confusion Matrix</h2>
+    <div class="confusion-matrix-container">
+        <table class="confusion-matrix">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Predicted: No</th>
+                    <th>Predicted: Yes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Actual: No</th>
+                    <td class="cm-tn">{{ metrics.confusion_matrix[0][0] }}</td>
+                    <td class="cm-fp">{{ metrics.confusion_matrix[0][1] }}</td>
+                </tr>
+                <tr>
+                    <th>Actual: Yes</th>
+                    <td class="cm-fn">{{ metrics.confusion_matrix[1][0] }}</td>
+                    <td class="cm-tp">{{ metrics.confusion_matrix[1][1] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Feature Importance -->
+<section class="section">
+    <h2 class="section-title">⭐ Feature Importance</h2>
+    <div class="feature-list">
+        {% for feature, coef in metrics.feature_importance.items() %}
+        <div class="feature-item">
+            <div class="feature-name">{{ feature }}</div>
+            <div class="feature-bar-container">
+                {% if coef >= 0 %}
+                <div class="feature-bar positive" style="width: {{ (coef / 2.3 * 100) | round(0) }}%;"></div>
+                {% else %}
+                <div class="feature-bar negative" style="width: {{ ((-coef) / 2.3 * 100) | round(0) }}%;"></div>
+                {% endif %}
+            </div>
+            <div class="feature-value">{{ coef }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Model Details -->
+<section class="section">
+    <h2 class="section-title">⚙️ Model Details</h2>
+    <table class="info-table">
+        <tr><td>Algorithm</td><td>Logistic Regression</td></tr>
+        <tr><td>Solver</td><td>LBFGS</td></tr>
+        <tr><td>Class Weight</td><td>Balanced</td></tr>
+        <tr><td>Training Samples</td><td>{{ metrics.train_size }}</td></tr>
+        <tr><td>Test Samples</td><td>{{ metrics.test_size }}</td></tr>
+        <tr><td>Train / Test Split</td><td>80% / 20%</td></tr>
+        <tr><td>Feature Scaling</td><td>StandardScaler</td></tr>
+    </table>
+</section>
+{% endblock %}

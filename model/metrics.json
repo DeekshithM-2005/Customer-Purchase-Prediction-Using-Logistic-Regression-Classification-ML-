@@ -1,0 +1,60 @@
+{
+  "accuracy": 0.8613,
+  "precision": 0.5395,
+  "recall": 0.7147,
+  "f1_score": 0.6149,
+  "roc_auc": 0.8791,
+  "cv_accuracy_mean": 0.8514,
+  "cv_accuracy_std": 0.0542,
+  "confusion_matrix": [
+    [
+      1851,
+      233
+    ],
+    [
+      109,
+      273
+    ]
+  ],
+  "feature_importance": {
+    "PageValues": 2.2259,
+    "ExitRates": -0.6456,
+    "Month": 0.4098,
+    "BounceRates": -0.1703,
+    "SpecialDay": -0.1422,
+    "ProductRelated_Duration": 0.1395,
+    "ProductRelated": 0.1385,
+    "Informational": 0.1068,
+    "OperatingSystems": -0.0959,
+    "Weekend": 0.0814,
+    "Administrative": 0.0687,
+    "VisitorType": 0.0584,
+    "Region": -0.0544,
+    "Informational_Duration": -0.0356,
+    "TrafficType": 0.0348,
+    "Browser": 0.0276,
+    "Administrative_Duration": 0.0107
+  },
+  "feature_columns": [
+    "Administrative",
+    "Administrative_Duration",
+    "Informational",
+    "Informational_Duration",
+    "ProductRelated",
+    "ProductRelated_Duration",
+    "BounceRates",
+    "ExitRates",
+    "PageValues",
+    "SpecialDay",
+    "Month",
+    "OperatingSystems",
+    "Browser",
+    "Region",
+    "TrafficType",
+    "VisitorType",
+    "Weekend"
+  ],
+  "train_size": 9864,
+  "test_size": 2466,
+  "total_samples": 12330
+}
